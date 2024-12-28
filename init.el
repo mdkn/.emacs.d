@@ -28,9 +28,6 @@
  ;; If there is more than one, they won't work right.
  )
 
-(menu-bar-mode -1)
-(tool-bar-mode 0)
-
 (leaf files
   :doc "file input and output commands for Emacs"
   :global-minor-mode auto-save-visited-mode

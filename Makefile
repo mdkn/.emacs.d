@@ -12,7 +12,9 @@ clean:
 	$(RM) check.log clean.log
 
 check:
-	@$(EMACS) $(BATCH_OPTS) -l init.el 2>&1 | tee check.log | tail -1
+	@echo "Running smoke test..."
+	@chmod +x tools/test.sh
+	@./tools/test.sh
 
 build: clean
 	@$(EMACS) $(BATCH_OPTS) -f batch-byte-compile init.el | tee build.log | tail -1

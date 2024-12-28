@@ -77,3 +77,5 @@
 (global-set-key "\C-xj" 'skk-auto-fill-mode)
 (global-set-key "\C-xt" 'skk-tutorial)
 (global-set-key "\C-t\C-t" 'other-window)
+
+(message "End of loading init.el.")

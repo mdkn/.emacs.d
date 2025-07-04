@@ -62,6 +62,14 @@
 
 (global-set-key (kbd "<f9>") 'create-daily-report)
 
+(leaf org
+  :doc "Outline-based notes management and organizer"
+  :custom ((org-startup-truncated . nil)
+           (fill-column . 10000))
+  :hook ((org-mode-hook . (lambda ()
+                           (auto-fill-mode -1)
+                           (visual-line-mode 1)))))
+
 (leaf skk
   :ensure ddskk
   :custom ((default-input-method . "japanese-skk"))

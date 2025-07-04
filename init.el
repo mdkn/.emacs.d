@@ -123,3 +123,6 @@
 (global-set-key (kbd "<f8>") 'list-daily-reports)
 
 (message "End of loading init.el.")
+
+;; Use y/n instead of yes/no
+(fset 'yes-or-no-p 'y-or-n-p)

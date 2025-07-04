@@ -83,4 +83,43 @@
 (global-set-key "\C-xt" 'skk-tutorial)
 (global-set-key "\C-t\C-t" 'other-window)
 
+(defun list-daily-reports ()
+  "List all daily report files in the daily-report directory."
+  (interactive)
+  (let ((report-files (directory-files daily-report-directory nil "\\.org$")))
+    (if report-files
+        (with-output-to-temp-buffer "*Daily Reports*"
+          (princ "Daily Reports:\n")
+          (princ "==============\n\n")
+          (dolist (file (sort report-files 'string>))
+            (let ((full-path (expand-file-name file daily-report-directory))
+                  (summary ""))
+              (with-temp-buffer
+                (insert-file-contents full-path)
+                (when (re-search-forward "^\\* Summary" nil t)
+                  (forward-line 1)
+                  (let ((summary-start (point)))
+                    (when (re-search-forward "^\\* " nil t)
+                      (beginning-of-line)
+                      (let ((summary-content (string-trim (buffer-substring-no-properties summary-start (point)))))
+                        (unless (string-match-p "^[[:space:]]*$" summary-content)
+                          (setq summary summary-content)))))))
+              (princ (format "%s %s\n" file (if (string-empty-p summary) "" summary)))))
+          (with-current-buffer "*Daily Reports*"
+            (goto-char (point-min))
+            (local-set-key (kbd "RET") 'daily-report-open-at-point)
+            (local-set-key (kbd "q") 'quit-window)))
+      (message "No daily reports found in %s" daily-report-directory))))
+
+(defun daily-report-open-at-point ()
+  "Open the daily report file at point."
+  (interactive)
+  (let ((line (thing-at-point 'line t)))
+    (when (and line (string-match "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\.org\\)" line))
+      (let ((filename (match-string 1 line)))
+        (quit-window)
+        (find-file (expand-file-name filename daily-report-directory))))))
+
+(global-set-key (kbd "<f8>") 'list-daily-reports)
+
 (message "End of loading init.el.")

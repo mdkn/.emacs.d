@@ -46,15 +46,15 @@
   "Directory where daily reports are saved.")
 
 (defun create-daily-report ()
-  "Create or open a daily report file for today."
+  "Create or open a daily report file for today with date and time."
   (interactive)
   (unless (file-exists-p daily-report-directory)
     (make-directory daily-report-directory t))
-  (let* ((date-string (format-time-string "%Y-%m-%d"))
-         (file-name (expand-file-name (concat date-string ".org") daily-report-directory)))
+  (let* ((date-time-string (format-time-string "%Y-%m-%d_%H-%M-%S"))
+         (file-name (expand-file-name (concat date-time-string ".org") daily-report-directory)))
     (find-file file-name)
     (when (not (file-exists-p file-name))
-      (insert (format "#+TITLE: Daily Report - %s\n\n" date-string))
+      (insert (format "#+TITLE: Daily Report - %s\n\n" (format-time-string "%Y-%m-%d %H:%M:%S")))
       (insert "* Summary\n\n")
       (insert "* Tasks\n\n")
       (insert "* Notes\n\n"))
@@ -115,7 +115,7 @@
   "Open the daily report file at point."
   (interactive)
   (let ((line (thing-at-point 'line t)))
-    (when (and line (string-match "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\.org\\)" line))
+    (when (and line (string-match "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\(?:_[0-9]\\{2\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)?\\.org\\)" line))
       (let ((filename (match-string 1 line)))
         (quit-window)
         (find-file (expand-file-name filename daily-report-directory))))))

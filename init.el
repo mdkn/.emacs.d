@@ -122,6 +122,28 @@
 
 (global-set-key (kbd "<f8>") 'list-daily-reports)
 
+;; Claude Code IDE integration
+(leaf vterm
+  :doc "Terminal emulator for Emacs"
+  :ensure t)
+
+(leaf flycheck
+  :doc "Syntax checking for Emacs"
+  :ensure t
+  :global-minor-mode global-flycheck-mode)
+
+(leaf websocket
+  :doc "WebSocket library for Emacs"
+  :ensure t)
+
+;; Install claude-code-ide.el from GitHub
+(unless (package-installed-p 'claude-code-ide)
+  (let ((package-dir (expand-file-name "claude-code-ide" user-emacs-directory)))
+    (unless (file-exists-p package-dir)
+      (shell-command (format "git clone https://github.com/manzaltu/claude-code-ide.el.git %s" package-dir)))
+    (add-to-list 'load-path package-dir)
+    (require 'claude-code-ide)))
+
 (message "End of loading init.el.")
 
 ;; Use y/n instead of yes/no
